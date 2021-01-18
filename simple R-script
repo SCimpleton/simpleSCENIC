@@ -1,0 +1,100 @@
+#NB to reload loom at any stage#
+library(SCopeLoomR)
+scenicOptions <- readRDS("int/scenicOptions.Rds")
+cellInfo<- readRDS("int/cellInfo.Rds")
+scenicLoomPath <- getOutName(scenicOptions, "loomFile")
+loom <- open_loom(scenicLoomPath)
+regulons_incidMat <- get_regulons(loom)
+regulons <- regulonsToGeneLists(regulons_incidMat)
+regulonsAUC <- get_regulonsAuc(loom)
+regulonsAucThresholds <- get_regulonThresholds(loom)
+embeddings <- get_embeddings(loom)
+
+####load libraries####
+library(Seurat)
+library(SCENIC)
+library(AUCell)
+library(RcisTarget)
+library(SCopeLoomR)
+library(KernSmooth)
+library(BiocParallel)
+library(ggplot2)
+library(data.table)
+library(grid)
+library(ComplexHeatmap)
+
+####load data####
+#load seurat object
+load("~/data/Fetal bone/all_integratedv3.RData")
+
+####setnewwd####
+dir.create("SCENIC_cart")
+setwd("SCENIC_cart")
+
+#downsize
+all_bone = subset(all_bone, cells = sample(Cells(all_bone), 20000))
+all_bone$celltype<- all_bone@active.ident
+
+#matrix and cellinfo
+exprMat <- all_bone[["RNA"]]@data
+exprMat<- as.matrix(exprMat)
+cellInfo <- data.frame(seuratCluster=Idents(all_bone))
+cellTypeColumn <- "seuratCluster"
+colnames(cellInfo)[which(colnames(cellInfo)==cellTypeColumn)] <- "CellType"
+
+
+#savecellinfo
+cellInfo <- data.frame(cellInfo)
+cbind(table(cellInfo$CellType))
+dir.create("int")
+saveRDS(cellInfo, file="int/cellInfo.Rds")
+
+#save colour info for cell types - use same as colours for all_bone
+colVars <- list(CellType=c("LPM"="#1F78C8", "CAR_CELL"="#ff0000", "PROXIMAL_MESENCHYME"="#33a02c", "BMP4+_PC"="#6A33C2", "GREM1+VE_PC"="#ff7f00", "THBS2+VE_PC"="#565656", "INTERZONE"="#FFD700", "PERICHONDRIAL_CELL"="#a6cee3", "BMSC"="#FB6496", "FIBROBLAST"="#b2df8a", "CHONDROPROGENITOR"="#CAB2D6", "EARLY_CC"="#FDBF6F",  "PERIARTICULAR_CC"="#999999", "PROLIFERATING_CC"="#EEE685", "RESTING_CC"="#C8308C", "PREHYPERTROPHIC_CC"="#FF83FA", "PRE_OB"="#C814FA", "EARLY_OB"="#0000FF", "MATURE_OB"="#36648B"))
+
+colVars$CellType <- colVars$CellType[intersect(names(colVars$CellType), cellInfo$CellType)]
+saveRDS(colVars, file="int/colVars.Rds")
+plot.new(); legend(0,1, fill=colVars$CellType, legend=names(colVars$CellType))
+
+####initialise####
+scenicOptions <- initializeScenic(org="hgnc", dbDir="scenic", nCores=10, dbs=defaultDbNames[["hgnc"]])
+scenicOptions@inputDatasetInfo$cellInfo <- "int/cellInfo.Rds"
+scenicOptions@fileNames$output["loomFile",] <- "output/cartilage.loom"
+genesKept <- geneFiltering(exprMat, scenicOptions)
+exprMat_filtered <- exprMat[genesKept, ]
+runCorrelation(exprMat_filtered, scenicOptions)
+exprMat_filtered_log <- log2(exprMat_filtered+1) 
+
+#save progress#
+saveRDS(scenicOptions, file="int/scenicOptions.Rds")
+
+####GENIE3####
+runGenie3(exprMat_filtered_log, scenicOptions)
+
+####Build and score the GRN####
+exprMat_log <- log2(exprMat+1)
+scenicOptions <- runSCENIC_1_coexNetwork2modules(scenicOptions)
+scenicOptions <- runSCENIC_2_createRegulons(scenicOptions
+scenicOptions <- runSCENIC_3_scoreCells(scenicOptions, exprMat_log)
+scenicOptions <- runSCENIC_4_aucell_binarize(scenicOptions)
+saveRDS(scenicOptions, file="int/scenicOptions.Rds")
+
+#Write loom file
+export2scope(scenicOptions,exprMat)
+
+#plotting binary regulon heatmap
+minPerc <- .7
+binaryRegulonActivity <- loadInt(scenicOptions, "aucell_binary_nonDupl")
+cellInfo_binarizedCells <- cellInfo[which(rownames(cellInfo)%in% colnames(binaryRegulonActivity)),, drop=FALSE]
+regulonActivity_byCellType_Binarized <- sapply(split(rownames(cellInfo_binarizedCells), cellInfo_binarizedCells$seuratCluster), 
+                                                 +                                                function(cells) rowMeans(binaryRegulonActivity[,cells, drop=FALSE]))
+binaryActPerc_subset <- regulonActivity_byCellType_Binarized[which(rowSums(regulonActivity_byCellType_Binarized>minPerc)>0),]
+ComplexHeatmap::Heatmap(binaryActPerc_subset, name="Regulon activity (%)", col = c("white","pink","red"))
+
+#exploring tabularised regulators
+topRegulators <- reshape2::melt(regulonActivity_byCellType_Binarized)
+colnames(topRegulators) <- c("Regulon", "CellType", "RelativeActivity")
+topRegulators <- topRegulators[which(topRegulators$RelativeActivity>minPerc),]
+viewTable(topRegulators)
+View(topRegulators)
+View(binaryActPerc_subset)
