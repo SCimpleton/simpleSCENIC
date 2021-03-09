@@ -107,7 +107,7 @@ scenicOptions <- initializeScenic(org="hgnc", dbDir="scenic", nCores=10, dbs=def
 scenicOptions@inputDatasetInfo$cellInfo <- "int/cellInfo.Rds" 
                                            
 # now tell it where to put the loom object it will create (eventually) from the anaylsis, and what to call that loom object
-scenicOptions@fileNames$output["loomFile",] <- "output/cartilage.loom"
+scenicOptions@fileNames$output["loomFile",] <- "output/yourloom.loom"
   
 # processing the raw matrix
 genesKept <- geneFiltering(exprMat, scenicOptions)
@@ -196,8 +196,39 @@ linkList <- linkList[order(linkList[,"weight"], decreasing=TRUE),]
 linkList <- linkList[which(linkList[,"weight"]>0),]
 save(linkList, file="GENIE3_linkList.RData")
 ```
-### Whichever route you chose, you should now have a 'linklist' in your directory, +/- individual genie3 outputs...
+### Whichever route you chose, you should now have a 'linklist' in your directory, +/- individual GENIE3 outputs...
 ![image](https://user-images.githubusercontent.com/77628512/110475406-bef5c080-80d8-11eb-89a3-abe3a47416a6.png)
 
+# Now we need to do the final steps back in R using this linklist as the starting point
+scenicOptions <- readRDS("int/scenicOptions.Rds")
 
+# Build and score the GRN- step 2 mentioned at the start. worth reducing the number of cores as for unknown reason (at time of writing) this causes errors if too high
+# https://github.com/aertslab/SCENIC/issues/38 https://github.com/aertslab/AUCell/issues/3 
+scenicOptions@settings$nCores <- 2
+
+runSCENIC_1_coexNetwork2modules(scenicOptions)
+runSCENIC_2_createRegulons(scenicOptions)
+exprMat_log <- log2(exprMat+1)
+runSCENIC_3_scoreCells(scenicOptions, exprMat_log)
+runSCENIC_4_aucell_binarize(scenicOptions)
+saveRDS(scenicOptions, file="int/scenicOptions.Rds")
+
+# write the results into a loom file (specified when you initialised the scenicOptions) to explore the results. Two weird lines added here due a bug in the code
+fileName <- getOutName(scenicOptions, "loomFile")
+scenicOptions@inputDatasetInfo$cellInfo = cellInfo
+export2scope(scenicOptions,exprMat)
+```
+After this stage, everything you need for analysis is done and can be loaded at any time:
+
+```markdown
+scenicOptions <- readRDS("int/scenicOptions.Rds")
+cellInfo<- readRDS("int/cellInfo.Rds")
+scenicLoomPath <- getOutName(scenicOptions, "loomFile")
+loom <- open_loom(scenicLoomPath)
+regulons_incidMat <- get_regulons(loom)
+regulons <- regulonsToGeneLists(regulons_incidMat)
+regulonsAUC <- get_regulonsAuc(loom)
+regulonsAucThresholds <- get_regulonThresholds(loom)
+embeddings <- get_embeddings(loom)
+```
 
