@@ -131,9 +131,29 @@ exportsForArboreto(exprMat, scenicOptions, dir = "int")
 
 Then switch to python!
 ```markdown
-#you may need to install some packages first
+#you may need to install some packages first. This is best done in a new environment, unless you're using a jupyter notebook (recommended for ease)
+# create the conda environment named "arboreto-env"
+$ conda create --name arboreto-env
+
+# activate the conda environment we just created
+$ source activate arboreto-env
+
+# note: your terminal will indicate which environment is active on the left
+(arboreto-env) $ ...
+
+# install arboreto into the "arboreto-env" environment (hit Y to proceed)
+(arboreto-env) $ pip install arboreto
+
+#import
 import os
 import pandas as pd
 
 from arboreto.algo import grnboost2, genie3
 from arboreto.utils import load_tf_names
+
+#load in the .txt files created in R
+tf_names = load_tf_names("<path-to-txt-file>")
+ex_matrix = pd.read_csv("<path-to-text-file>, sep='\t')
+  
+#run GRNboost
+network = grnboost2(expression_data=ex_matrix, tf_names=tf_names)
