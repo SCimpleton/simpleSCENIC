@@ -6,7 +6,7 @@ This might be cells in a developing tissue, in culture or cells in a disease pro
 
 When you are doing the above, scRNAsq is essentially showing you the various _transcriptional states_ of a tissue. 
 How many states exist within your sample is a tricky question, and kind of centres around some sort of combination
-of how varied the tissue actually is, combined with your clustering resolution and how confident you are that each
+of how diverse the sample actually is, combined with your clustering resolution and how confident you are that each
 cluster you annotate as a seperate state/type is actually that. My boss always says you should be able to stand up 
 in court and justify that they are truly different.
 
