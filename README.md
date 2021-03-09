@@ -22,6 +22,13 @@ The latter step is more complex, but basically it uses databases (you need to do
 to check if the appropriate **transcription factor binding motifs** are significantly over-represented near the **transcription start site (TSS)**
 of the genes picked out in step 1). This leaves you with a set of TFs and their targets, known together as a **'regulon'**
 
+Whilst the results are still going to be noisy, it remains a powerful tool. However, as datasets get bigger and bigger, the computational demands of running
+SCENIC in R are becoming overwhelming. 14k cells run on 100gb cluster takes about a week.. So they have a faster python implementation (not great if you fear snakes)
+
+The other issue is if like me you're not really a computer person, the vignettes aren't great and contain several typos and outdated commands.
+
+I've put this code together to solve the above problems- it allows you to run only the intensive part in python (for speed) and everything else including plotting in R
+I hope it is helpful!
 
 
 ```markdown
