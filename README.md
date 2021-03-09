@@ -268,7 +268,8 @@ ComplexHeatmap::Heatmap(binaryActPerc_subset, name= "Proportion Active", col = R
 ```
 Here is an example where column_km and row_km have been applied to the heatmap command to show distinct
 TF activity by groups of cells, and highlight transcriptional 'programmes' for cell types:
-![image](https://user-images.githubusercontent.com/77628512/110490234-033c8d00-80e8-11eb-9db1-ad8703af204a.png)
+![image](https://user-images.githubusercontent.com/77628512/110490509-4e56a000-80e8-11eb-9bfd-7bdfadf37fe4.png)
+
 
 ```markdown
 # if you want to highlight some key TFs, you can do so by stating their row number and name, disabling row names and adding an annotation:
