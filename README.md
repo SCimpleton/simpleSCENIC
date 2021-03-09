@@ -127,3 +127,13 @@ This can be done in R, using GENIE3 (gold standard, but takes a loooooooong time
 ```markdown
 # In R, this command writes the approapriate txt files for use in python in the 'int' directory from before
 exportsForArboreto(exprMat, scenicOptions, dir = "int")
+```
+
+Then switch to python!
+```markdown
+#you may need to install some packages first
+import os
+import pandas as pd
+
+from arboreto.algo import grnboost2, genie3
+from arboreto.utils import load_tf_names
