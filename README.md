@@ -89,7 +89,8 @@ cbind(table(cellInfo$CellType))
 dir.create("int")
 saveRDS(cellInfo, file="int/cellInfo.Rds")
           
-# save colour info for each of your cell states/types in the above CellInfo - use the same colours as your seurat dimplot to make for better figures later on
+# save colour info for each of your cell states/types in the above CellInfo - use the same colours as your seurat 
+dimplot to make for better figures later on
 colVars <- list(CellType=c("cellA"="#1F78C8", "CellB"="#ff0000", "CellC"="#33a02c", "CellD"="#6A33C2", "CellF"="#ff7f00", "CellG"="#565656"        
 colVars$CellType <- colVars$CellType[intersect(names(colVars$CellType), cellInfo$CellType)]
 saveRDS(colVars, file="int/colVars.Rds")
