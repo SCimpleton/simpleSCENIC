@@ -132,16 +132,13 @@ exportsForArboreto(exprMat, scenicOptions, dir = "int")
 Then switch to python!
 ```markdown
 #you may need to install some packages first. This is best done in a new environment, unless you're using a jupyter notebook (recommended for ease)
-# create the conda environment named "arboreto-env"
-$ conda create --name arboreto-env
+# create an environment called 'scenic'
+$ conda create --name scenic-env
 
-# activate the conda environment we just created
-$ source activate arboreto-env
+# activate it
+$ source activate scenic-env
 
-# note: your terminal will indicate which environment is active on the left
-(arboreto-env) $ ...
-
-# install arboreto into the "arboreto-env" environment (hit Y to proceed)
+# now install arboreto (this gives us access to grnboost)
 (arboreto-env) $ pip install arboreto
 
 #import
