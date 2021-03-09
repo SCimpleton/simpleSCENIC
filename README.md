@@ -199,7 +199,7 @@ save(linkList, file="GENIE3_linkList.RData")
 ### Whichever route you chose, you should now have a 'linklist' in your directory, +/- individual GENIE3 outputs...
 ![image](https://user-images.githubusercontent.com/77628512/110475406-bef5c080-80d8-11eb-89a3-abe3a47416a6.png)
 
-# Now we need to do the final steps back in R using this linklist as the starting point
+### Now we need to do the final steps back in R using this linklist as the starting point
 ```markdown
 scenicOptions <- readRDS("int/scenicOptions.Rds")
 
@@ -207,7 +207,10 @@ scenicOptions <- readRDS("int/scenicOptions.Rds")
 # https://github.com/aertslab/SCENIC/issues/38 https://github.com/aertslab/AUCell/issues/3 
 scenicOptions@settings$nCores <- 2
 
-runSCENIC_1_coexNetwork2modules(scenicOptions)
+# In the first step, you need to specify your link list if you used the python step
+runSCENIC_1_coexNetwork2modules(scenicOptions, linkList = "<path-to-linklist.tsv>"))
+
+# now run the rest
 runSCENIC_2_createRegulons(scenicOptions)
 exprMat_log <- log2(exprMat+1)
 runSCENIC_3_scoreCells(scenicOptions, exprMat_log)
