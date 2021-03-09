@@ -158,3 +158,40 @@ network = grnboost2(expression_data=ex_matrix, tf_names=tf_names)
 #write the output for use as the linklist in downstream SCENIC R steps
 network.to_csv('linklist.tsv', sep='\t', header=False, index=False)
   ```
+
+### The R route - slow and steady..
+```markdown
+# this step will take many days with modern datasets. run it in terminal to reduce the risk of crashing adn lsing everything.
+runGenie3(exprMat_filtered_log, scenicOptions)
+
+# a clever failsafe is to split the exprmat into a list, splitting the task into small chunks which are saved separately
+(see https://github.com/aertslab/GENIE3/issues/1)
+genesSplit <- split(sort(rownames(exprMatrix_filtered_log)), 1:10)
+lenghts(genesSplit)
+
+for(i in 1:length(genesSplit))
+{
+  print(i)
+  set.seed(93827)
+  weightMatrix <- GENIE3(exprMatrix_filtered_log, regulators=inputTFs, nCores=24, targets=genesSplit[[i]])
+  save(weightMatrix, file=paste0("GENIE3_weightMatrix_",i,".RData"))
+}
+
+# Merge results:
+library(GENIE3)
+linkList_list <- list()
+for(i in 1:10)
+{
+  load(paste0("int/1.3_GENIE3_weightMatrix_",i,".RData"))
+  linkList_list[[i]] <- getLinkList(weightMatrix)
+}
+length(linkList_list)
+sapply(linkList_list, nrow)
+
+linkList <- do.call(rbind, linkList_list)
+colnames(linkList) <- c("TF", "Target", "weight")
+linkList <- linkList[order(linkList[,"weight"], decreasing=TRUE),]
+linkList <- linkList[which(linkList[,"weight"]>0),]
+nrow(linkList)
+head(linkList)
+save(linkList, file="GENIE3_linkList.RData")
