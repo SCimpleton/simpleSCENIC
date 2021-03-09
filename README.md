@@ -197,6 +197,7 @@ linkList <- linkList[which(linkList[,"weight"]>0),]
 save(linkList, file="GENIE3_linkList.RData")
 ```
 ### Whichever route you chose, you should now have a 'linklist' in your directory, +/- individual genie3 outputs...
-![image](https://user-images.githubusercontent.com/77628512/110475224-8524ba00-80d8-11eb-93f2-c9569c0304c6.png)
+![image](https://user-images.githubusercontent.com/77628512/110475406-bef5c080-80d8-11eb-89a3-abe3a47416a6.png)
+
 
 
