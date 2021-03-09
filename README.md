@@ -15,6 +15,7 @@ In other words, **Which transcription factors are pulling the strings?**
 TO keep it SCimple, SCENIC does two things:
 
 **1)** It finds out which genes are co-expressed with TFs in the data, and writes that down in a table
+
 **2)** It scrutinises the results to try and reduce noise (chance co-expression)
 
 The latter step is more complex, but basically it uses databases (you need to download these and point SCENIC in their direction)
