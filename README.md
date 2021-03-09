@@ -29,10 +29,10 @@ The other issue is if like me you're not really a computer person, the vignettes
 
 I've put this code together to solve the above problems- it allows you to run only the intensive part in python (for speed) and everything else including plotting in R.
 
-I'm assuming an annotated Seurat object as a starting point
+I'm assuming an annotated Seurat object as a starting point, and use the human database (see https://resources.aertslab.org/cistarget/ for others)
 
 ```markdown
-#First, install all the packages you're going to need
+# First, install all the packages you're going to need
 
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 BiocManager::install(c("AUCell", "RcisTarget"))
@@ -42,8 +42,41 @@ BiocManager::install(c("DT", "NMF", "ComplexHeatmap", "R2HTML", "Rtsne"))
 BiocManager::install(c("doMC", "doRNG"))
 if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 devtools::install_github("aertslab/SCopeLoomR", build_vignettes = TRUE)
+devtools::install_github("aertslab/SCENIC") 
 
-# Header 1
+# load libraries
+library(Seurat)
+library(SCENIC)
+library(AUCell)
+library(RcisTarget)
+library(SCopeLoomR)
+library(KernSmooth)
+library(BiocParallel)
+library(ggplot2)
+library(data.table)
+library(grid)
+library(ComplexHeatmap)
+
+# load seurat object
+load("<path-to-your-object>")
+
+# optional- subset your object to make it more manageable, and make a celltype metadata column from current identities
+seurat = subset(seurat, cells = sample(Cells(seurat), 10000))
+seurat$celltype<- seurat@active.ident
+  
+# At this point it's probably best to create a working directory to do all this work in, so do this next
+dir.create("SCENIC")
+setwd("SCENIC")
+
+# now download the database to this directory so that SCENIC can use it later on (they're quite large)
+dbFiles <- c("https://resources.aertslab.org/cistarget/databases/homo_sapiens/hg19/refseq_r45/mc9nr/gene_based/hg19-500bp-upstream-7species.mc9nr.feather",
+"https://resources.aertslab.org/cistarget/databases/homo_sapiens/hg19/refseq_r45/mc9nr/gene_based/hg19-tss-centered-10kb-7species.mc9nr.feather")
+
+for(featherURL in dbFiles)
+{
+  download.file(featherURL, destfile=basename(featherURL)) 
+}
+
 ## Header 2
 ### Header 3
 
