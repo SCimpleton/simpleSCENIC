@@ -200,6 +200,7 @@ save(linkList, file="GENIE3_linkList.RData")
 ![image](https://user-images.githubusercontent.com/77628512/110475406-bef5c080-80d8-11eb-89a3-abe3a47416a6.png)
 
 # Now we need to do the final steps back in R using this linklist as the starting point
+```markdown
 scenicOptions <- readRDS("int/scenicOptions.Rds")
 
 # Build and score the GRN- step 2 mentioned at the start. worth reducing the number of cores as for unknown reason (at time of writing) this causes errors if too high
