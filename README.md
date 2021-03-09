@@ -164,8 +164,10 @@ network.to_csv('linklist.tsv', sep='\t', header=False, index=False)
 # this step will take many days with modern datasets. run it in terminal to reduce the risk of crashing adn lsing everything.
 runGenie3(exprMat_filtered_log, scenicOptions)
 
-# a clever failsafe is to split the exprmat into a list, splitting the task into small chunks which are saved separately
-# (see https://github.com/aertslab/GENIE3/issues/1)
+# a clever failsafe is to split the exprmat into a list, splitting the task into small chunks which are saved separately then combined. 
+# Requires GENIE3 direct rather than in SCENIC- note altered command (see https://github.com/aertslab/GENIE3/issues/1)
+# the "GENIE3_linkList.RData" is the same end output as the above command in SCENIC
+library(GENIE3)
 genesSplit <- split(sort(rownames(exprMatrix_filtered_log)), 1:10)
 lenghts(genesSplit)
 
@@ -186,7 +188,6 @@ for(i in 1:10)
   linkList_list[[i]] <- getLinkList(weightMatrix)
 }
 length(linkList_list)
-```
 sapply(linkList_list, nrow)
 
 linkList <- do.call(rbind, linkList_list)
