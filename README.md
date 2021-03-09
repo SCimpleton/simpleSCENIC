@@ -267,8 +267,8 @@ binaryActPerc_subset <- regulonActivity_byCellType_Binarized[which(rowSums(regul
 ComplexHeatmap::Heatmap(binaryActPerc_subset, name= "Proportion Active", col = RColorBrewer::brewer.pal(name = "RdYlBu", n = 9), row_names_gp = gpar(fontsize = 3), rect_gp = gpar(col = "white", lwd = 0.5), column_title = "Regulon Activity by Cell Type (binarised)", row_title_rot = 0, border=TRUE)
 ```
 Here is an example where column_km and row_km have been applied to the heatmap command to show distinct
-TF activity by groups of cells, and highlight 'programmes' for cell types:
-![image](https://user-images.githubusercontent.com/77628512/110489036-f23f4c00-80e6-11eb-8815-e8e3bf167b72.png)
+TF activity by groups of cells, and highlight transcriptional 'programmes' for cell types:
+![image](https://user-images.githubusercontent.com/77628512/110490234-033c8d00-80e8-11eb-9db1-ad8703af204a.png)
 
 ```markdown
 # if you want to highlight some key TFs, you can do so by stating their row number and name, disabling row names and adding an annotation:
