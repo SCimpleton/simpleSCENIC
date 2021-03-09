@@ -154,3 +154,7 @@ ex_matrix = pd.read_csv("<path-to-text-file>, sep='\t')
   
 #run GRNboost
 network = grnboost2(expression_data=ex_matrix, tf_names=tf_names)
+  
+#write the output for use as the linklist in downstream SCENIC R steps
+network.to_csv('linklist.tsv', sep='\t', header=False, index=False)
+  ```
