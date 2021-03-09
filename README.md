@@ -222,7 +222,14 @@ fileName <- getOutName(scenicOptions, "loomFile")
 scenicOptions@inputDatasetInfo$cellInfo = cellInfo
 export2scope(scenicOptions,exprMat)
 ```
-After this stage, everything you need for analysis is done and can be loaded at any time:
+After this stage, everything you need for analysis is in the 'output' directory, including some cool heatmaps that show regulon activity with various parameters:
+![image](https://user-images.githubusercontent.com/77628512/110482783-ed779980-80e0-11eb-9b1e-8bb02550299e.png)
+
+Here is an example of heatmap - the colours should match your seurat UMAP
+![image](https://user-images.githubusercontent.com/77628512/110483272-78f12a80-80e1-11eb-9988-d8d4fc8c7da9.png)
+
+
+This output data can be loaded into R for remaining analysis at any time:
 
 ```markdown
 scenicOptions <- readRDS("int/scenicOptions.Rds")
