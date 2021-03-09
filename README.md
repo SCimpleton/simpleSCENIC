@@ -27,7 +27,10 @@ SCENIC in R are becoming overwhelming. 14k cells run on 100gb cluster takes abou
 
 The other issue is if like me you're not really a computer person, the vignettes aren't great and contain several typos and outdated commands.
 
-I've put this code together to solve the above problems- it allows you to run only the intensive part in python (for speed) and everything else including plotting in R
+I've put this code together to solve the above problems- it allows you to run only the intensive part in python (for speed) and everything else including plotting in R.
+
+I'm assuming an annotated Seurat object as a starting point
+
 I hope it is helpful!
 
 
