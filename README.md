@@ -277,7 +277,7 @@ annot = rowAnnotation(foo = anno_mark(at = c(1, 10, 20, 25), labels = c("KLF4", 
 ComplexHeatmap::Heatmap(binaryActPerc_subset, name= "Proportion Active", col = RColorBrewer::brewer.pal(name = "RdYlBu", n = 9), row_names_gp = gpar(fontsize = 3), rect_gp = gpar(col = "white", lwd = 0.5), column_title = "Regulon Activity by Cell Type (binarised)", row_title_rot = 0, border=TRUE, right_annotation =ha, show_row_names = F)
 
 
-# table of regulators by cell type
+# Finally, a table of regulators by cell type is really useful data to explore
 topRegulators <- reshape2::melt(regulonActivity_byCellType_Binarized)
 colnames(topRegulators) <- c("Regulon", "CellType", "RelativeActivity")
 topRegulators <- topRegulators[which(topRegulators$RelativeActivity>minPerc),]
