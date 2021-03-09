@@ -97,25 +97,31 @@ saveRDS(colVars, file="int/colVars.Rds")
 # quickly check the colours match the UMAP
 plot.new(); legend(0,1, fill=colVars$CellType, legend=names(colVars$CellType))
 
-### Header 3
+# now actually create your scenic object. The object class is its own thing - scenicOptions - and as you perform functions it will write **a lot** of new files to the "/int" directory and a "/output" directory it will create
+#first tell it the directory where the databases are and that they are human                    
+scenicOptions <- initializeScenic(org="hgnc", dbDir="scenic", nCores=10, dbs=defaultDbNames[["hgnc"]])
 
-- Bulleted
-- List
+# now the cell info
+scenicOptions@inputDatasetInfo$cellInfo <- "int/cellInfo.Rds" 
+                                           
+# now tell it where to put the loom object it will create (eventually) from the anaylsis, and what to call that loom object
+scenicOptions@fileNames$output["loomFile",] <- "output/cartilage.loom"
+  
+# processing the raw matrix
+genesKept <- geneFiltering(exprMat, scenicOptions)
+exprMat_filtered <- exprMat[genesKept, ]
+runCorrelation(exprMat_filtered, scenicOptions)
+exprMat_filtered_log <- log2(exprMat_filtered+1)   
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+# save the scenicOptions object
+saveRDS(scenicOptions, file="int/scenicOptions.Rds")
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+At this stage we are ready to test for TF / gene co-expression
 
-### Jekyll Themes
+This can be done in R, using GENIE3 (gold standard, but takes a loooooooong time) or in python, using GRNBoost (much faster and essentially the same performance)
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/SCimpleton/simpleSCENIC/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+###The python route###
+```
+# In R, this command writes the approapriate txt files for use in python in the 'int' directory from before
+exportsForArboreto(exprMat, scenicOptions, dir = "int")
