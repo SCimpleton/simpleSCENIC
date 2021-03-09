@@ -196,12 +196,7 @@ linkList <- linkList[order(linkList[,"weight"], decreasing=TRUE),]
 linkList <- linkList[which(linkList[,"weight"]>0),]
 save(linkList, file="GENIE3_linkList.RData")
 ```
-### Whichever route you chose, you should now have a 'linklist'...
-This is just a table of 'TF', 'target', 'importance'
-TF 	target 	importance
-108 	G109 	G1406 	135.832105
-15 	G16 	G1440 	132.702686
-15 	G16 	G687 	119.453194
-187 	G188 	G938 	119.043848
-9 	G10 	G1312 	117.662291
+### Whichever route you chose, you should now have a 'linklist' in your directory, +/- individual genie3 outputs...
+![image](https://user-images.githubusercontent.com/77628512/110475224-8524ba00-80d8-11eb-93f2-c9569c0304c6.png)
+
 
