@@ -121,7 +121,7 @@ saveRDS(scenicOptions, file="int/scenicOptions.Rds")
 
 At this stage we are ready to test for TF / gene co-expression
 
-This can be done in R, using GENIE3 (gold standard, but takes a loooooooong time) or in python, using GRNBoost (much faster and essentially the same performance)
+This can be done in R, using GENIE3 (gold standard, but takes a loooooooong time) or in python, using GRNBoost (around 10x faster (so still not quick) and essentially the same performance)
 
 ### The Python route
 ```markdown
