@@ -195,3 +195,13 @@ colnames(linkList) <- c("TF", "Target", "weight")
 linkList <- linkList[order(linkList[,"weight"], decreasing=TRUE),]
 linkList <- linkList[which(linkList[,"weight"]>0),]
 save(linkList, file="GENIE3_linkList.RData")
+```
+### Whichever route you chose, you should now have a 'linklist'...
+This is just a table of 'TF', 'target', 'importance'
+TF 	target 	importance
+108 	G109 	G1406 	135.832105
+15 	G16 	G1440 	132.702686
+15 	G16 	G687 	119.453194
+187 	G188 	G938 	119.043848
+9 	G10 	G1312 	117.662291
+
