@@ -99,7 +99,7 @@ saveRDS(colVars, file="int/colVars.Rds")
 plot.new(); legend(0,1, fill=colVars$CellType, legend=names(colVars$CellType))
 
 # now actually create your scenic object. The object class is its own thing - scenicOptions - and as you perform functions
-it will write **a lot** of new files to the "/int" directory and a "/output" directory it will create
+#it will write **a lot** of new files to the "/int" directory and a "/output" directory it will create
 #first tell it the directory where the databases are and that they are human                    
 scenicOptions <- initializeScenic(org="hgnc", dbDir="scenic", nCores=10, dbs=defaultDbNames[["hgnc"]])
 
