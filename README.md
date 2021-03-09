@@ -62,13 +62,12 @@ load("<path-to-your-object>")
 
 # optional- subset your object to make it more manageable, and make a celltype metadata column from current identities
 seurat = subset(seurat, cells = sample(Cells(seurat), 10000))
-seurat$celltype<- seurat@active.ident
   
 # At this point it's probably best to create a working directory to do all this work in, so do this next
 dir.create("SCENIC")
 setwd("SCENIC")
 
-# now download the database to this directory so that SCENIC can use it later on (they're quite large)
+# download the database to this directory so that SCENIC can use it later on (they're quite large)
 dbFiles <- c("https://resources.aertslab.org/cistarget/databases/homo_sapiens/hg19/refseq_r45/mc9nr/gene_based/hg19-500bp-upstream-7species.mc9nr.feather",
 "https://resources.aertslab.org/cistarget/databases/homo_sapiens/hg19/refseq_r45/mc9nr/gene_based/hg19-tss-centered-10kb-7species.mc9nr.feather")
 
@@ -76,8 +75,28 @@ for(featherURL in dbFiles)
 {
   download.file(featherURL, destfile=basename(featherURL)) 
 }
+           
+# Create expression matrix
+exprMat <- seurat[["RNA"]]@data
+exprMat<- as.matrix(exprMat)
 
-## Header 2
+# Create CellInfo object and save in a new directory 'int' to allow analysis by celltype later on (messy code to avoid an error later on)
+cellInfo <- data.frame(seuratCluster=Idents(seurat))
+cellTypeColumn <- "seuratCluster"
+colnames(cellInfo)[which(colnames(cellInfo)==cellTypeColumn)] <- "CellType"
+cellInfo <- data.frame(cellInfo)
+cbind(table(cellInfo$CellType))
+dir.create("int")
+saveRDS(cellInfo, file="int/cellInfo.Rds")
+          
+# save colour info for each of your cell states/types in the above CellInfo - use the same colours as your seurat dimplot to make for better figures later on
+colVars <- list(CellType=c("cellA"="#1F78C8", "CellB"="#ff0000", "CellC"="#33a02c", "CellD"="#6A33C2", "CellF"="#ff7f00", "CellG"="#565656"        
+colVars$CellType <- colVars$CellType[intersect(names(colVars$CellType), cellInfo$CellType)]
+saveRDS(colVars, file="int/colVars.Rds")
+
+# quickly check the colours match the UMAP
+plot.new(); legend(0,1, fill=colVars$CellType, legend=names(colVars$CellType))
+
 ### Header 3
 
 - Bulleted
