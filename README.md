@@ -214,19 +214,21 @@ runSCENIC_1_coexNetwork2modules(scenicOptions, linkList = "<path-to-linklist.tsv
 runSCENIC_2_createRegulons(scenicOptions)
 exprMat_log <- log2(exprMat+1)
 runSCENIC_3_scoreCells(scenicOptions, exprMat_log)
+
+#you can binarise regulon activity to on or off based on a threshold. This threshold can be altered to be less stringent if you want to, but sticking with default is a good idea to start
 runSCENIC_4_aucell_binarize(scenicOptions)
 saveRDS(scenicOptions, file="int/scenicOptions.Rds")
 
-# write the results into a loom file (specified when you initialised the scenicOptions) to explore the results. Two weird lines added here due a bug in the code
+# write the loom file (specified when you initialised the scenicOptions) to explore the results. Two weird lines added here due a bug in the code
 fileName <- getOutName(scenicOptions, "loomFile")
 scenicOptions@inputDatasetInfo$cellInfo = cellInfo
 export2scope(scenicOptions,exprMat)
 ```
-After this stage, everything you need for analysis is in the 'output' directory, including some cool heatmaps that show regulon activity with various parameters:
+After this stage, everything you need for analysis is in the 'output' directory, including some heatmaps that show regulon activity with various parameters:
 
 ![image](https://user-images.githubusercontent.com/77628512/110482783-ed779980-80e0-11eb-9b1e-8bb02550299e.png)
 
-Here is an example of heatmap - the colours should match your seurat UMAP
+Here is an example of heatmap, with cells as collumns and regulons as rows- the colours should match your seurat UMAP
 ![image](https://user-images.githubusercontent.com/77628512/110483272-78f12a80-80e1-11eb-9988-d8d4fc8c7da9.png)
 
 
@@ -244,3 +246,40 @@ regulonsAucThresholds <- get_regulonThresholds(loom)
 embeddings <- get_embeddings(loom)
 ```
 
+There are lots of ways to explore the results, but probably the most digestible to start with are some heatmaps and tables based on your seurat identities:
+
+```markdown
+# heatmap of regulon activity (non-binarised)
+regulonAUC <- loadInt(scenicOptions, "aucell_regulonAUC")
+regulonAUC <- regulonAUC[onlyNonDuplicatedExtended(rownames(regulonAUC)),]
+regulonActivity_byCellType <- sapply(split(rownames(cellInfo), cellInfo$CellType), function(cells) rowMeans(getAUC(regulonAUC)[,cells]))
+regulonActivity_byCellType_Scaled <- t(scale(t(regulonActivity_byCellType), center = T, scale=T))
+
+# the heatmap parameters can be played with quite a lot - see https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html
+ComplexHeatmap::Heatmap(regulonActivity_byCellType_Scaled, name= "ACtivity", col = RColorBrewer::brewer.pal(name = "RdYlBu", n = 9), row_names_gp = gpar(fontsize = 3), rect_gp = gpar(col = "white", lwd = 0.5), column_title = "Regulon Activity by Cell Type", row_title_rot = 0, border=TRUE)
+
+# similar thing for the binarised results
+minPerc <- .7
+binaryRegulonActivity <- loadInt(scenicOptions, "aucell_binary_nonDupl")
+cellInfo_binarizedCells <- cellInfo[which(rownames(cellInfo)%in% colnames(binaryRegulonActivity)),, drop=FALSE]
+regulonActivity_byCellType_Binarized <- sapply(split(rownames(cellInfo_binarizedCells), cellInfo_binarizedCells$CellType),function(cells) rowMeans(binaryRegulonActivity[,cells, drop=FALSE]))
+binaryActPerc_subset <- regulonActivity_byCellType_Binarized[which(rowSums(regulonActivity_byCellType_Binarized>minPerc)>0),]
+ComplexHeatmap::Heatmap(binaryActPerc_subset, name= "Proportion Active", col = RColorBrewer::brewer.pal(name = "RdYlBu", n = 9), row_names_gp = gpar(fontsize = 3), rect_gp = gpar(col = "white", lwd = 0.5), column_title = "Regulon Activity by Cell Type (binarised)", row_title_rot = 0, border=TRUE)
+```
+Here is an example where column_km and row_km have been applied to the heatmap command to show distinct
+TF activity by groups of cells, and highlight 'programmes' for cell types:
+![image](https://user-images.githubusercontent.com/77628512/110489036-f23f4c00-80e6-11eb-8815-e8e3bf167b72.png)
+
+
+# if you want to highligh some key TFs, you can do so by stating their row number and name, disabling row names and adding an annotation:
+annot = rowAnnotation(foo = anno_mark(at = c(1, 10, 20, 25), labels = c("KLF4", "SOX9", "ATF4", "RUNX2")))
+ComplexHeatmap::Heatmap(binaryActPerc_subset, name= "Proportion Active", col = RColorBrewer::brewer.pal(name = "RdYlBu", n = 9), row_names_gp = gpar(fontsize = 3), rect_gp = gpar(col = "white", lwd = 0.5), column_title = "Regulon Activity by Cell Type (binarised)", row_title_rot = 0, border=TRUE, right_annotation =ha, show_row_names = F)
+
+
+# table of regulators by cell type
+topRegulators <- reshape2::melt(regulonActivity_byCellType_Binarized)
+colnames(topRegulators) <- c("Regulon", "CellType", "RelativeActivity")
+topRegulators <- topRegulators[which(topRegulators$RelativeActivity>minPerc),]
+viewTable(topRegulators)
+View(topRegulators)
+View(binaryActPerc_subset)
