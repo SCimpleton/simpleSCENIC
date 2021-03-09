@@ -32,7 +32,7 @@ I've put this code together to solve the above problems- it allows you to run on
 I'm assuming an annotated Seurat object as a starting point, and use the human database (see https://resources.aertslab.org/cistarget/ for others)
 
 ```markdown
-# First, install all the packages you're going to need (I'll assume you have the more amainstream ones)
+# First, install all the packages you're going to need (I'll assume you have the more mainstream ones)
 
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 BiocManager::install(c("AUCell", "RcisTarget"))
