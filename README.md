@@ -60,7 +60,7 @@ library(ComplexHeatmap)
 # load seurat object
 load("<path-to-your-object>")
 
-# optional- subset your object to make it more manageable, and make a celltype metadata column from current identities
+# optional- subset your object to make it more manageable (eg 10k cells)
 seurat = subset(seurat, cells = sample(Cells(seurat), 10000))
   
 # At this point it's probably best to create a working directory to do all this work in, so do this next
