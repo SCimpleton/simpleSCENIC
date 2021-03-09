@@ -223,6 +223,7 @@ scenicOptions@inputDatasetInfo$cellInfo = cellInfo
 export2scope(scenicOptions,exprMat)
 ```
 After this stage, everything you need for analysis is in the 'output' directory, including some cool heatmaps that show regulon activity with various parameters:
+
 ![image](https://user-images.githubusercontent.com/77628512/110482783-ed779980-80e0-11eb-9b1e-8bb02550299e.png)
 
 Here is an example of heatmap - the colours should match your seurat UMAP
