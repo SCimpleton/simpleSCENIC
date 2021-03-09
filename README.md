@@ -1,12 +1,16 @@
 ## Simple code to run SCENIC on your single cell data
 
-You can use the [editor on GitHub](https://github.com/SCimpleton/simpleSCENIC/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+The fundamental bug plus of single cell seq experiments is exploring the heterogeneity of a biological sample. 
+This is particularly interesting (I think) if you are focusing on a single tissue type as it undergoes change
+This might be cells in a developing tissue, in culture or cells in a disease process (maybe compared to normal tissue)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+When you are doing the above, scRNAsq is essentially showing you the various _transcriptional states_ of a tissue. 
+How many states exist within your sample is a tricky question, and kind of centres around some sort of combination
+of how varied the tissue actually is, combined with your clustering resolution and how confident you are that each
+cluster you annotate as a seperate state/type is actually that. My boss always says you should be able to stand up 
+in court and justify that they are truly different.
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
 Syntax highlighted code block
