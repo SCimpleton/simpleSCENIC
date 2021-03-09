@@ -32,7 +32,16 @@ I hope it is helpful!
 
 
 ```markdown
-Syntax highlighted code block
+#First, install all the packages you're going to need
+
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+BiocManager::install(c("AUCell", "RcisTarget"))
+BiocManager::install(c("GENIE3")) # Optional. Can be replaced by GRNBoost
+BiocManager::install(c("zoo", "mixtools", "rbokeh"))
+BiocManager::install(c("DT", "NMF", "ComplexHeatmap", "R2HTML", "Rtsne"))
+BiocManager::install(c("doMC", "doRNG"))
+if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
+devtools::install_github("aertslab/SCopeLoomR", build_vignettes = TRUE)
 
 # Header 1
 ## Header 2
