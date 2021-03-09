@@ -31,9 +31,6 @@ I've put this code together to solve the above problems- it allows you to run on
 
 I'm assuming an annotated Seurat object as a starting point
 
-I hope it is helpful!
-
-
 ```markdown
 #First, install all the packages you're going to need
 
