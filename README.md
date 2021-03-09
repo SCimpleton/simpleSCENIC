@@ -123,7 +123,7 @@ At this stage we are ready to test for TF / gene co-expression
 
 This can be done in R, using GENIE3 (gold standard, but takes a loooooooong time) or in python, using GRNBoost (much faster and essentially the same performance)
 
-# The Python route
+### The Python route
 ```
 # In R, this command writes the approapriate txt files for use in python in the 'int' directory from before
 exportsForArboreto(exprMat, scenicOptions, dir = "int")
