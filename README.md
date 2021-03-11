@@ -210,6 +210,10 @@ scenicOptions@settings$nCores <- 2
 # In the first step, you need to tweak the GRNboost output so that it is recognised correctly.
 linklist<- importArboreto(fileName = "<path-to-linklist.tsv>", reorder = T)
 
+# remove the junk
+linklist<- linklist[,c(1,2,4)]
+colnames(linklist) <- c("TF","Target","weight")
+
 # run the next step
 runSCENIC_1_coexNetwork2modules(scenicOptions, linkList=linklist)
 
