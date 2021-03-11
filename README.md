@@ -207,18 +207,11 @@ scenicOptions <- readRDS("int/scenicOptions.Rds")
 # https://github.com/aertslab/SCENIC/issues/38 https://github.com/aertslab/AUCell/issues/3 
 scenicOptions@settings$nCores <- 2
 
-# In the first step, you need to tweak the GRNboost output so that it is recognised correctly. The Genie3 output values are <1, and GRN around 100+ but this shouldnt have major effects
-linlist <- read.delim("<path-to-linklist.tsv>", header=T)
-colnames(linklist) <- c("TF","Target","weight")
-
-# make sure the weight column is numeric
-class(linklist$weight)
-
-# save it so scenic recognises it as the input
-saveRDS(linklist, file="int/1.4_GENIE3_linkList.Rds")
+# In the first step, you need to tweak the GRNboost output so that it is recognised correctly.
+linklist<- importArboreto(fileName = "<path-to-linklist.tsv>", reorder = T)
 
 # run the next step
-runSCENIC_1_coexNetwork2modules(scenicOptions)
+runSCENIC_1_coexNetwork2modules(scenicOptions, linkList=linklist)
 
 # now run the rest
 runSCENIC_2_createRegulons(scenicOptions)
