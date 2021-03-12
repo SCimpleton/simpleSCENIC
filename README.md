@@ -150,7 +150,7 @@ from arboreto.utils import load_tf_names
 
 #load in the .txt files created in R
 tf_names = load_tf_names("<path-to-txt-file>")
-ex_matrix = pd.read_csv("<path-to-text-file>, sep='\t')
+ex_matrix = pd.read_csv("<path-to-text-file>", sep='\t')
   
 #run GRNboost
 network = grnboost2(expression_data=ex_matrix, tf_names=tf_names)
