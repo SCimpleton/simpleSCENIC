@@ -208,9 +208,7 @@ scenicOptions <- readRDS("int/scenicOptions.Rds")
 scenicOptions@settings$nCores <- 1
 
 # In the first step, you need to tweak the GRNboost output so that it is recognised correctly.
-linklist <- read.delim("<path-to-linklist.tsv", header=TRUE)
-colnames(linklist) <- c("TF","Target","weight")
-linklist<- importArboreto(linklist, reorder = T)
+linklist<- importArboreto("<path-to-linklist.tsv>", reorder = T)
 
 # remove the junk
 linklist<- linklist[,c(1,2,4)]
