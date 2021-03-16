@@ -125,8 +125,8 @@ This can be done in R, using GENIE3 (gold standard, but takes a loooooooong time
 
 ### The Python route
 ```markdown
-# In R, this command writes the approapriate txt files for use in python in the 'int' directory from before
-exportsForArboreto(exprMat, scenicOptions, dir = "int")
+# In R, this command writes the approapriate txt files for use in python in the 'int' directory from before- takes filtered matrix input
+exportsForArboreto(exprMat_filtered, scenicOptions, dir = "int")
 ```
 
 Then switch to python!
