@@ -221,8 +221,10 @@ runSCENIC_1_coexNetwork2modules(scenicOptions, linkList=linklist)
 runSCENIC_2_createRegulons(scenicOptions)
 exprMat_log <- log2(exprMat+1)
 
-# there's a bug in AUcell which is not fixed at time of writing, so install the developer version (1.13.1)
+# there's a bug in AUcell which is not fixed at time of writing which prevents use of cores>1, so install the developer version if you need >1 (1.13.1)
 devtools::install_github("aertslab/AUCell")
+
+#run
 runSCENIC_3_scoreCells(scenicOptions, exprMat_log)
 
 #you can binarise regulon activity to on or off based on a threshold. This threshold can be altered to be less stringent if you want to, but sticking with default is a good idea to start
