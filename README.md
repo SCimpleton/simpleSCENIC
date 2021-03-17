@@ -44,6 +44,11 @@ if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 devtools::install_github("aertslab/SCopeLoomR", build_vignettes = TRUE)
 devtools::install_github("aertslab/SCENIC") 
 
+# These packages need to be current for step3
+install.packages("doSNOW")
+install.packages("doParallel") 
+install.packages("doMPI")
+
 # load libraries
 library(Seurat)
 library(SCENIC)
