@@ -211,9 +211,7 @@ save(linkList, file="GENIE3_linkList.RData")
 ```markdown
 scenicOptions <- readRDS("int/scenicOptions.Rds")
 
-# Build and score the GRN- step 2 mentioned at the start. worth reducing the number of cores as for unknown reason (at time of writing) this causes errors in step 2 and 3 if too high
-# https://github.com/aertslab/SCENIC/issues/38 https://github.com/aertslab/AUCell/issues/3 
-scenicOptions@settings$nCores <- 1
+# Build and score the GRN- step 2 mentioned at the start. 
 
 # In the first step, you need to tweak the GRNboost output so that it is recognised correctly.
 linklist<- importArboreto("<path-to-linklist.tsv>", reorder = T)
@@ -231,6 +229,9 @@ exprMat_log <- log2(exprMat+1)
 
 # there's a bug in AUcell which is not fixed at time of writing which prevents use of cores>1, so install the developer version if you need >1 (1.13.1)
 devtools::install_github("aertslab/AUCell")
+
+# otherwise set cores to 1 https://github.com/aertslab/SCENIC/issues/38 https://github.com/aertslab/AUCell/issues/3 
+scenicOptions@settings$nCores <- 1
 
 #run
 runSCENIC_3_scoreCells(scenicOptions, exprMat_log)
