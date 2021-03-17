@@ -69,10 +69,11 @@ load("<path-to-your-object>")
 seurat = subset(seurat, cells = sample(Cells(seurat), 10000))
   
 # At this point it's probably best to create a working directory to do all this work in, so do this next
-dir.create("SCENIC")
-setwd("SCENIC")
+dir.create("TF_PROJECT")
+setwd("TF_PROJECT")
 
 # download the database to this directory so that SCENIC can use it later on (they're quite large)
+setwd("scenic")
 dbFiles <- c("https://resources.aertslab.org/cistarget/databases/homo_sapiens/hg19/refseq_r45/mc9nr/gene_based/hg19-500bp-upstream-7species.mc9nr.feather",
 "https://resources.aertslab.org/cistarget/databases/homo_sapiens/hg19/refseq_r45/mc9nr/gene_based/hg19-tss-centered-10kb-7species.mc9nr.feather")
 
@@ -80,6 +81,8 @@ for(featherURL in dbFiles)
 {
   download.file(featherURL, destfile=basename(featherURL)) 
 }
+           
+setwd("..")
            
 # Create expression matrix
 exprMat <- seurat[["RNA"]]@data
