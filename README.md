@@ -261,8 +261,8 @@ scenicLoomPath <- getOutName(scenicOptions, "loomFile")
 loom <- open_loom(scenicLoomPath)
 regulons_incidMat <- get_regulons(loom)
 regulons <- regulonsToGeneLists(regulons_incidMat)
-regulonsAUC <- get_regulonsAuc(loom)
-regulonsAucThresholds <- get_regulonThresholds(loom)
+regulonsAUC <- get_regulons_AUC(loom)
+regulonsAucThresholds <- get_regulon_thresholds(loom)
 embeddings <- get_embeddings(loom)
 ```
 
