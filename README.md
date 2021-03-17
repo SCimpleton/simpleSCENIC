@@ -234,7 +234,7 @@ saveRDS(scenicOptions, file="int/scenicOptions.Rds")
 # write the loom file (specified when you initialised the scenicOptions) to explore the results. Two weird lines added here due a bug in the code
 fileName <- getOutName(scenicOptions, "loomFile")
 scenicOptions@inputDatasetInfo$cellInfo = cellInfo
-export2scope(scenicOptions,exprMat)
+export2loom(scenicOptions,exprMat)
 ```
 After this stage, everything you need for analysis is in the 'output' directory, including some heatmaps that show regulon activity with various parameters:
 
